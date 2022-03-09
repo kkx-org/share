@@ -7,8 +7,15 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-actix-web = "4.0.0-beta.7"
-sqlx = { version = "0.5", features = [ "runtime-actix-native-tls", "postgres", "uuid" ] }
-serde = { version = "1.0.126", features = [ "derive" ] }
+log = "0.4"
+actix-web = "4"
+thiserror = "1.0"
 dotenv = "0.15.0"
-uuid = "0.8.2"
+env_logger = "0.9"
+rust-argon2 = "1.0"
+lazy_static = "1.4.0"
+serde = { version = "1", features = [ "derive" ] }
+tokio = { version = "1.17.0", features = ["full"] }
+rand = { version = "0.8.5", features = ["std"] }
+uuid = { version = "0.8.2", features = [ "serde" ] }
+sqlx = { version = "0.5", features = [ "runtime-tokio-native-tls", "postgres", "uuid" ] }

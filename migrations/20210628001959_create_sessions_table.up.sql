@@ -7,6 +7,8 @@ CREATE TABLE sessions (
 	FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
+CREATE INDEX ON sessions(expired_after);
+
 CREATE OR REPLACE FUNCTION delete_expired_sessions() RETURNS trigger AS $$
 	BEGIN
 		DELETE FROM sessions WHERE now_utc() > expired_after;

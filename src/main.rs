@@ -1,14 +1,23 @@
-mod api;
-mod db;
+mod controllers;
+mod models;
+mod repositories;
+mod services;
+mod utils;
+mod validators;
 
-use actix_web::{middleware::Logger, App, HttpServer};
+use actix_web::{
+    middleware::{Logger, NormalizePath, TrailingSlash},
+    web::Data,
+    App, HttpServer,
+};
 use dotenv::dotenv;
 use sqlx::PgPool;
 use std::env;
 
-#[actix_web::main]
+#[tokio::main]
 async fn main() -> std::io::Result<()> {
     dotenv().ok();
+    env_logger::init();
 
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL is not set");
     let db_pool = PgPool::connect(&database_url)
@@ -17,9 +26,11 @@ async fn main() -> std::io::Result<()> {
 
     HttpServer::new(move || {
         App::new()
+            .configure(utils::actix::init_errors)
             .wrap(Logger::default())
-            .data(db_pool.clone())
-            .configure(api::init)
+            .wrap(NormalizePath::new(TrailingSlash::Always))
+            .app_data(Data::new(db_pool.clone()))
+            .configure(controllers::init)
     })
     .bind(env::var("LISTEN_ADDRESS").expect("LISTEN_ADDRESS is not set"))?
     .run()

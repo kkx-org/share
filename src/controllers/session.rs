@@ -1,4 +1,4 @@
-use actix_web::{delete, get, http::StatusCode, post, put, web, Error, HttpResponse, Responder};
+use actix_web::{delete, http::StatusCode, put, web, HttpResponse};
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize)]
@@ -22,5 +22,5 @@ async fn create() -> HttpResponse {
 }
 
 pub fn init(cfg: &mut web::ServiceConfig) {
-    cfg.service(web::scope("/session").service(register));
+    cfg.service(web::scope("/session").service(create));
 }
